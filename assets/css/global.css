@@ -1,0 +1,123 @@
+body {
+    font-family:"Figtree", sans-serif;
+  }
+  
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Figtree", sans-serif;
+  }
+  
+  .heading-1 {
+    font-family: "Figtree", sans-serif;
+    font-weight: 500;
+    font-size: 48px;
+    line-height: 60px;
+  }
+  
+  .heading-2 {
+    font-family: "Figtree", sans-serif;
+    font-weight: 500;
+    font-size: 36px;
+    line-height: 48px;
+  }
+  
+  .heading-3 {
+    font-family: "Figtree", sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    line-height: 42px;
+  }
+  .heading-4 {
+    font-family: "Figtree", sans-serif;
+    font-weight: 500;
+    font-size: 30px;
+    line-height: 40px;
+  }
+  .heading-5 {
+    font-family: "Figtree", sans-serif;
+    font-weight: 500;
+    font-size: 22px;
+    line-height: 32px;
+  }
+  
+  .bold-1 {
+    font-weight: 700;
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 0%;
+  }
+  
+  .bold-2 {
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0%;
+  }
+  
+  .bold-3 {
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 0%;
+  }
+  
+  .medium-1 {
+    font-weight: 500;
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 0%;
+  }
+  
+  .medium-2 {
+    font-weight: 500;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 0%;
+  }
+  
+  .body-text-1 {
+    font-weight: normal;
+    font-size: 18px;
+    line-height: 28px;
+    letter-spacing: 1%;
+  }
+  
+  .body-text-2 {
+    font-weight: normal;
+    font-size: 16px;
+    line-height: 26px;
+    letter-spacing: 1%;
+  }
+  
+  .body-text-3 {
+    font-weight: normal;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 1%;
+  }
+  
+  .button-text-1 {
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 1%;
+  }
+  
+  .button-mobile {
+    font-weight: bold;
+    font-size: 14px;
+    line-height: 24px;
+    letter-spacing: 14%;
+  }
+  
+  .button-mobile-small {
+    font-weight: bold;
+    font-size: 12px;
+    line-height: 22px;
+    letter-spacing: 14%;
+  }
+  
