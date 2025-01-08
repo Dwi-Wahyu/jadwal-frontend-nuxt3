@@ -9,14 +9,13 @@
         :class="store.sidebarActive ? 'justify-between' : 'mb-2 justify-center'"
       >
         <img
-          src="/icons/E-Jadwal-Active.svg"
-          v-if="store.sidebarActive"
+          :src="
+            store.sidebarActive
+              ? '/icons/E-Jadwal-Active.svg'
+              : '/icons/E-Jadwal-Inactive.svg'
+          "
           alt=""
-        />
-        <img
-          src="/icons/E-Jadwal-Inactive.svg"
-          v-if="!store.sidebarActive"
-          alt=""
+          :class="store.sidebarActive ? '' : 'mb-2'"
         />
       </div>
       <hr />
@@ -102,8 +101,8 @@
         <img
           :src="
             store.sidebarActive
-              ? '/icons/E-Jadwal-active.svg'
-              : '/icons/E-Jadwal-inactive.svg'
+              ? '/icons/E-Jadwal-Active.svg'
+              : '/icons/E-Jadwal-Inactive.svg'
           "
           alt=""
           :class="store.sidebarActive ? '' : 'mb-2'"
