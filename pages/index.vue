@@ -198,6 +198,9 @@ import Select from "~/components/widgets/data-input/Select.vue";
 import FileInput from "~/components/widgets/data-input/FileInput.vue";
 import Modal from "~/components/widgets/popup/Modal.vue";
 import type { FieldError } from "~/types/FieldErrorTypes";
+import { useRuntimeConfig } from "#app";
+
+const runtimeConfig = useRuntimeConfig();
 
 const showModalForm = ref(false);
 const showToast = ref(false);
@@ -297,7 +300,9 @@ const handleSubmit = async () => {
       payload.append("surat_permohonan", surat.value);
     }
 
-    const postRequest = await fetch("http://localhost:3001/api/peminjaman", {
+    const url = runtimeConfig.app.baseURL + "/peminjaman";
+
+    const postRequest = await fetch(url, {
       method: "POST",
       body: payload,
     });
