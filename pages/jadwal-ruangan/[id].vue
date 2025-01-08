@@ -13,7 +13,7 @@
     </div>
 
     <Card class="p-5 w-full rounded-xl sm:w-[55%] mt-24">
-      <Calendar @toggle-modal-form="toggleModal" />
+      <Calendar @toggle-modal-form="toggleModal" :filtered="true" />
     </Card>
 
     <Toast
@@ -279,6 +279,10 @@ function validateSurat() {
   }
 }
 
+function hapusFilter() {
+  navigateTo("/");
+}
+
 const handleSubmit = async () => {
   validateForm();
 
@@ -313,7 +317,7 @@ const handleSubmit = async () => {
 };
 
 const loadRuangan = async () => {
-  const request = await axios.get("/ruangan");
+  const request = await axios.get(`/ruangan/${ruangan.value}`);
 
   if (request.status == 200) {
     const data = [];

@@ -10,15 +10,15 @@ export default {
   theme: {
     extend: {
       screens: {
-        'sm': '450px',
+        sm: "450px",
 
-        'md': '768px',
-  
-        'lg': '1024px',
-  
-        'xl': '1280px',
-  
-        '2xl': '1536px',
+        md: "768px",
+
+        lg: "1024px",
+
+        xl: "1280px",
+
+        "2xl": "1536px",
       },
       colors: {
         "font-1": "#101828",
@@ -39,10 +39,11 @@ export default {
         "dark-blue": "#0B387C",
         orange: "#F87D46",
         green: "#03CEA4",
-        primary: "#f1c40f",
+        primary: "#079992",
+        secondary: "#058C71",
         second: "#f39c12",
-        danger: "#c0392b"
-
+        danger: "#c0392b",
+        success: "#2ECC71",
       },
     },
   },
@@ -52,15 +53,11 @@ export default {
       pattern: /text-(left|center|right)/,
     },
     {
-      pattern: /^(bg|text|border)-(blue|dark-blue|orange|green|line|soft-blue|background|background-2|background-3)$/,
+      pattern:
+        /^(bg|text|border)-(blue|dark-blue|orange|green|line|soft-blue|background|background-2|background-3)$/,
     },
     // {
-    //   pattern: /^(bg|text|border)-(blue|dark-blue|orange|green)$/,
-    //   variants: ['hover', 'focus'],
+    //   pattern: /^(bg-opacity)$/,
     // },
-    {
-      pattern: /^(bg-opacity)$/,
-    },
   ],
-}
-
+};

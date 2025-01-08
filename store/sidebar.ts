@@ -3,9 +3,9 @@ import { menuItems } from "~/data/sidebar/menu";
 
 export const useMySidebarStore = defineStore("mySidebarStore", {
   state: () => ({
-    appName: "eData Garing",
+    appName: "E-Jadwal",
     menu: menuItems,
-    parentActive: "/",
+    parentActive: "/dashboard",
     sidebarActive: true,
   }),
   actions: {

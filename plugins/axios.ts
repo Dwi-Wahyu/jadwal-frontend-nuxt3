@@ -9,8 +9,6 @@ export default defineNuxtPlugin((nuxtApp) => {
   const store = useMyAuthStore();
   const router = useRouter(); // Tambahkan router
 
-  console.log(store.token);
-
   let axiosInstance: AxiosInstance;
 
   axiosInstance = axios.create({
