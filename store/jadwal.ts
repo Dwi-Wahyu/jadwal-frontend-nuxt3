@@ -32,8 +32,6 @@ export const useMyJadwalStore = defineStore({
           .post("/jadwal", payload)
           .then((response) => {
             this.responseData = response.data;
-            console.log(response);
-
             resolve(response.data);
           })
           .catch((error) => {

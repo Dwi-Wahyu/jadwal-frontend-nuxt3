@@ -6,7 +6,7 @@ export const useMySidebarStore = defineStore("mySidebarStore", {
     appName: "E-Jadwal",
     menu: menuItems,
     parentActive: "/dashboard",
-    sidebarActive: true,
+    sidebarActive: false,
   }),
   actions: {
     async changeParent(payload: any) {

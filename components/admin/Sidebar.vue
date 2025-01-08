@@ -9,11 +9,13 @@
         :class="store.sidebarActive ? 'justify-between' : 'mb-2 justify-center'"
       >
         <img
-          :src="
-            store.sidebarActive
-              ? '/icons/E-Jadwal-active.svg'
-              : '/icons/E-Jadwal-inactive.svg'
-          "
+          src="/icons/E-Jadwal-Active.svg"
+          v-if="store.sidebarActive"
+          alt=""
+        />
+        <img
+          src="/icons/E-Jadwal-Inactive.svg"
+          v-if="!store.sidebarActive"
           alt=""
         />
       </div>
@@ -161,6 +163,9 @@
 import { useMySidebarStore } from "~/store/sidebar";
 import Card from "@/components/widgets/card/Card.vue";
 import { useMyAuthStore } from "~/store/auth";
+
+import EJadwalActive from "~/components/icons/E-Jadwal-active.svg";
+import EJadwalInactive from "~/components/icons/E-Jadwal-active.svg";
 
 const store = useMySidebarStore();
 const route = useRoute();

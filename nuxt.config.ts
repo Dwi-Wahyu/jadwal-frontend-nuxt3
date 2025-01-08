@@ -38,7 +38,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       axios: {
-        baseURL: "http://localhost:3001/api/",
+        // baseURL: "http://41.216.186.45:8005/api",
+        baseURL: "http://localhost:3001/api",
       },
     },
   },

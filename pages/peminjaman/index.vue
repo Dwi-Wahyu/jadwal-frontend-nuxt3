@@ -115,15 +115,15 @@ import Input from "~/components/widgets/data-input/Input.vue";
 import Select from "~/components/widgets/data-input/Select.vue";
 import Pagination from "~/components/widgets/datatable/Pagination.vue";
 import Table from "~/components/widgets/datatable/Table.vue";
-import Modal from "~/components/widgets/popup/Modal.vue";
-import Toast from "~/components/widgets/popup/Toast.vue";
 
 import Close from "@/public/icons/Close.svg";
 
 import Alert from "~/components/widgets/popup/Alert.vue";
 import { useMyPeminjamanStore } from "~/store/peminjaman";
+import { useMyRuanganStore } from "~/store/ruangan";
 
 const peminjamanStore = useMyPeminjamanStore();
+const ruanganStore = useMyRuanganStore();
 
 const actions = [{ label: "Detail", onClick: onDetailClick }];
 
@@ -252,14 +252,15 @@ watch([search, filterRuangan, filterStatus, filterTanggal], () => {
 });
 
 const loadRuangan = async () => {
-  const fetchRuangan = await axios.get("/ruangan");
+  const allRuangan = await axios.get("/ruangan");
 
-  if (fetchRuangan.status === 200) {
-    for (const element of fetchRuangan.data.data) {
+  if (allRuangan.status == 200) {
+    for (const element of allRuangan.data.data) {
       ruanganOptions.value.push({
         label: element.nama,
         value: element.id,
       });
+      filterRuangan.value = ruanganOptions.value[0].value;
     }
   }
 };

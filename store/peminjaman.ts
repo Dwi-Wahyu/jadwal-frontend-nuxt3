@@ -44,7 +44,6 @@ export const useMyPeminjamanStore = defineStore({
             },
           })
           .then((response) => {
-            console.log(response.data);
             this.responseData = response.data;
             resolve(response.data);
           })
@@ -96,7 +95,8 @@ export const useMyPeminjamanStore = defineStore({
                   status: element.status,
                 };
 
-                this.data.push(tempData);
+                // this.data.push(tempData);
+                this.data = [];
               }
             );
 
@@ -104,8 +104,6 @@ export const useMyPeminjamanStore = defineStore({
             this.totalPages = this.responseData?.data.totalPages;
             this.totalDatas = this.responseData?.data.totalDatas;
             this.loading = false;
-
-            console.log(this.responseData?.data);
 
             resolve(this.data);
           })

@@ -24,9 +24,9 @@
     </div>
 
     <Table
-      :headers="store.tableHeaders"
-      :data="store.data"
-      :loading="store.loading"
+      :headers="jadwalStore.tableHeaders"
+      :data="jadwalStore.data"
+      :loading="jadwalStore.loading"
       :show-button-action="true"
       :actions="actions"
       :columns-visible="['nama_ruangan', 'tanggal', 'mulai', 'selesai']"
@@ -34,10 +34,10 @@
     <Pagination
       class="mt-3"
       :model-value="perPage"
-      :current-page="store.currentPage"
-      :total-pages="store.totalPages"
-      :total-datas="store.totalDatas"
-      :per-page="store.perPage"
+      :current-page="jadwalStore.currentPage"
+      :total-pages="jadwalStore.totalPages"
+      :total-datas="jadwalStore.totalDatas"
+      :per-page="jadwalStore.perPage"
       @page-change="handlePageChange"
       @perpage-change="handlePerPageChange"
     />
@@ -206,11 +206,11 @@ import Toast from "~/components/widgets/popup/Toast.vue";
 import Trash from "@/public/icons/Trash.svg";
 import Edit from "@/public/icons/Edit.svg";
 
-import { useMyJadwalStore } from "~/store/jadwal";
 import Alert from "~/components/widgets/popup/Alert.vue";
 import type { FieldError } from "~/types/FieldErrorTypes";
+import { useMyJadwalStore } from "~/store/jadwal";
 
-const store = useMyJadwalStore();
+const jadwalStore = useMyJadwalStore();
 
 type Options = {
   label: string;
@@ -254,10 +254,10 @@ const loadData = () => {
     search: search.value,
     ruangan: filterRuangan.value,
     tanggal: filterTanggal.value,
-    per_page: store.perPage,
-    page: store.currentPage,
+    per_page: jadwalStore.perPage,
+    page: jadwalStore.currentPage,
   };
-  store.getData(payload).then((res) => {});
+  jadwalStore.getData(payload).then((res: any) => {});
 };
 
 const onChangeRuangan = async (value: string) => {
@@ -332,7 +332,7 @@ async function handleEdit() {
   validateForm();
 
   if (!fieldError.value.length) {
-    store.updateData(payload).then((response: any) => {
+    jadwalStore.updateData(payload).then((response: any) => {
       console.log(response);
 
       if (response.success) {
@@ -406,15 +406,27 @@ async function handleSubmit() {
       id_ruangan: ruangan.value,
     };
 
-    const postRequest = await fetch("http://localhost:3001/api/jadwal", {
-      method: "POST",
-      body: JSON.stringify(payload),
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    // const postRequest = await fetch("http://localhost:3001/api/jadwal", {
+    //   method: "POST",
+    //   body: JSON.stringify(payload),
+    //   headers: {
+    //     "Content-Type": "application/json",
+    //   },
+    // });
 
-    if (postRequest.ok) {
+    const postRequest = await axios.post(
+      "/jadwal",
+      { payload },
+      {
+        withCredentials: true,
+        headers: {
+          "Access-Control-Allow-Origin": "*",
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    if (postRequest.status == 200) {
       toastLabel.value = "Berhasil input jadwal";
       toggleToast();
       toggleModalForm();
@@ -424,12 +436,12 @@ async function handleSubmit() {
 }
 
 const handlePageChange = (page: any) => {
-  store.currentPage = page;
+  jadwalStore.currentPage = page;
   loadData();
 };
 
 const handlePerPageChange = (value: any) => {
-  store.perPage = value;
+  jadwalStore.perPage = value;
   loadData();
 };
 
