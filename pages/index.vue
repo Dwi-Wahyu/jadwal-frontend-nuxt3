@@ -300,7 +300,7 @@ const handleSubmit = async () => {
       payload.append("surat_permohonan", surat.value);
     }
 
-    const url = runtimeConfig.app.baseURL + "/peminjaman";
+    const url = runtimeConfig.public.axios.baseURL + "/peminjaman";
 
     const postRequest = await fetch(url, {
       method: "POST",

@@ -13,7 +13,7 @@ export const useMyRuanganStore = defineStore({
     perPage: 5,
     data: [] as any[],
     totalDatas: 5,
-    tableHeaders: ["Nama Ruangan", "Kategori", "Kapasitas"],
+    tableHeaders: ["Nama Ruangan", "Kategori", "Kapasitas", "Aksi"],
     step: 1,
     error: false,
     error_data: null as ResData | null,
@@ -61,6 +61,7 @@ export const useMyRuanganStore = defineStore({
             if (this.responseData) {
               for (const element of this.responseData.data.data) {
                 let tempData = {
+                  id: element.id,
                   nama: element.nama,
                   kategori: element.kategori,
                   kapasitas: element.kapasitas,

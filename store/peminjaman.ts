@@ -95,12 +95,13 @@ export const useMyPeminjamanStore = defineStore({
                   status: element.status,
                 };
 
-                // this.data.push(tempData);
-                this.data = [];
+                this.data.push(tempData);
               }
             );
 
-            this.currentPage = this.currentPage;
+            console.log(this.data);
+
+            this.currentPage = this.responseData?.data.currentPage;
             this.totalPages = this.responseData?.data.totalPages;
             this.totalDatas = this.responseData?.data.totalDatas;
             this.loading = false;

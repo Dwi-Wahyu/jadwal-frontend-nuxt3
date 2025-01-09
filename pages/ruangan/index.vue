@@ -21,7 +21,8 @@
       :data="store.data"
       :loading="!store.loading"
       :show-row-numbers="true"
-      :show-button-action="false"
+      :show-button-action="true"
+      :actions="actions"
       :columns-visible="['nama', 'kategori', 'kapasitas']"
     />
   </div>
@@ -39,11 +40,7 @@
     />
   </div>
 
-  <Toast
-    v-if="showToast"
-    @close="toggleToast"
-    label="Ruangan berhasil ditambahkan"
-  />
+  <Toast v-if="showToast" @close="toggleToast" :label="toastLabel" />
 
   <Modal
     v-if="showModal"
@@ -78,6 +75,47 @@
       />
     </form>
   </Modal>
+
+  <Modal
+    v-if="showEditModal"
+    title="Edit Ruangan"
+    @action="handleEdit"
+    @close="toggleEditModal"
+  >
+    <form class="flex flex-col gap-4">
+      <Input
+        v-model="nama"
+        label="Nama Ruangan"
+        id="namaRuangan"
+        type="text"
+        placeholder="Masukkan nama ruangan"
+        :error="fieldError == 'nama'"
+      />
+      <h1 v-if="fieldError == 'nama'" class="">Nama ruangan sudah ada</h1>
+      <Input
+        v-model="kapasitas"
+        label="Kapasitas Ruangan"
+        id="kapasitas"
+        type="number"
+        placeholder="Masukkan kapasitas ruangan"
+      />
+      <Select
+        :model-value="kategori"
+        id="kategoriRuangan"
+        label="Kategori Ruangan"
+        :options="kategoriRuanganOptions"
+        placeholder="Pilih Kategori Ruangan"
+        @update:model-value="onKategoriChange"
+      />
+    </form>
+  </Modal>
+
+  <Alert
+    v-if="showAlert"
+    :label="alertLabel"
+    @cancel="toggleAlert"
+    @confirm="handleHapus"
+  />
 </template>
 
 <script lang="ts" setup>
@@ -94,6 +132,12 @@ import Table from "~/components/widgets/datatable/Table.vue";
 import Modal from "~/components/widgets/popup/Modal.vue";
 import Toast from "~/components/widgets/popup/Toast.vue";
 import { useMyRuanganStore } from "~/store/ruangan";
+import Trash from "@/public/icons/Trash.svg";
+import Edit from "@/public/icons/Edit.svg";
+import Alert from "~/components/widgets/popup/Alert.vue";
+
+const axios = useAxios();
+
 const store = useMyRuanganStore();
 
 const kategoriRuanganOptions = ref([
@@ -107,24 +151,57 @@ const kategoriRuanganOptions = ref([
 
 const fieldError = ref("");
 
+const id = ref("");
 const nama = ref("");
 const kapasitas = ref("");
 const kategori = ref("Ruang Kuliah");
 const perPage = ref(store.perPage);
 
+const alertLabel = ref("");
+
 const onKategoriChange = (value: string) => {
   kategori.value = value;
 };
 
+const showAlert = ref(false);
 const showModal = ref(false);
 const showToast = ref(false);
+const showEditModal = ref(false);
+const toastLabel = ref("");
 
-const toggleToast = () => {
+function toggleToast() {
   showToast.value = !showToast.value;
-};
+}
+
+function toggleAlert() {
+  showAlert.value = !showAlert.value;
+}
 
 function toggleModal() {
   showModal.value = !showModal.value;
+}
+
+function toggleEditModal() {
+  showEditModal.value = !showEditModal.value;
+}
+
+const actions = [
+  { label: "Edit", onClick: onEditClick, btnVariant: "primary", icon: Edit },
+  { label: "Hapus", onClick: onHapusClick, btnVariant: "danger", icon: Trash },
+];
+
+function onEditClick(row: any) {
+  id.value = row.id;
+  nama.value = row.nama;
+  kapasitas.value = row.kapasitas;
+  kategori.value = row.kategori;
+  toggleEditModal();
+}
+
+function onHapusClick(row: any) {
+  id.value = row.id;
+  alertLabel.value = `Anda yakin menghapus ${row.nama} ?`;
+  toggleAlert();
 }
 
 const search = ref("");
@@ -138,6 +215,34 @@ const loadData = () => {
   store.getData(payload).then((res) => {});
 };
 
+async function handleEdit() {
+  const payload = {
+    nama: nama.value,
+    kapasitas: kapasitas.value,
+    kategori: kategori.value,
+  };
+
+  const postRequest = await axios.put(`/ruangan/${id.value}`, payload);
+
+  if (postRequest.status == 200) {
+    toastLabel.value = "Berhasil edit ruangan";
+    toggleEditModal();
+    toggleToast();
+    loadData();
+  }
+}
+
+async function handleHapus() {
+  const deleteRequest = await axios.delete(`/ruangan/${id.value}`);
+
+  if (deleteRequest.status == 200) {
+    toastLabel.value = "Berhasil hapus ruangan";
+    toggleAlert();
+    toggleToast();
+    loadData();
+  }
+}
+
 function handleSubmit() {
   const payload = {
     nama: nama.value,
@@ -149,6 +254,7 @@ function handleSubmit() {
     fieldError.value = "";
 
     if (response.success) {
+      toastLabel.value = "Berhasil tambah ruangan";
       toggleModal();
       toggleToast();
       loadData();

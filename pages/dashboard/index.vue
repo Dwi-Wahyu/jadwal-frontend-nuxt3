@@ -26,6 +26,11 @@
 <script lang="ts" setup>
 import Calendar from "~/components/widgets/Calendar/Calendar.vue";
 import Card from "~/components/widgets/card/Card.vue";
+import { useMyJadwalStore } from "~/store/jadwal";
+import { useMyPeminjamanStore } from "~/store/peminjaman";
+
+const myJadwalStore = useMyJadwalStore();
+const myPeminjamanStore = useMyPeminjamanStore();
 
 definePageMeta({
   layout: "default",

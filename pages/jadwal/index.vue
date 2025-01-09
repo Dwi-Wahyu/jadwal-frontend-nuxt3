@@ -17,7 +17,7 @@
         variant="underline"
         v-model="filterTanggal"
       />
-      <Input variant="underline" id="pencarian" label="Pencarian" />
+      <Button @click="clearFilter">Clear Filter</Button>
       <Button variant="secondary" size="md" @click="toggleModalForm">
         Tambah Jadwal
       </Button>
@@ -241,6 +241,11 @@ const status = ref("");
 const filterRuangan = ref("");
 const filterTanggal = ref("");
 
+function clearFilter() {
+  filterRuangan.value = "";
+  filterTanggal.value = "";
+}
+
 const onFilterRuanganChange = (value: string) => {
   filterRuangan.value = value;
 };
@@ -406,25 +411,7 @@ async function handleSubmit() {
       id_ruangan: ruangan.value,
     };
 
-    // const postRequest = await fetch("http://localhost:3001/api/jadwal", {
-    //   method: "POST",
-    //   body: JSON.stringify(payload),
-    //   headers: {
-    //     "Content-Type": "application/json",
-    //   },
-    // });
-
-    const postRequest = await axios.post(
-      "/jadwal",
-      { payload },
-      {
-        withCredentials: true,
-        headers: {
-          "Access-Control-Allow-Origin": "*",
-          "Content-Type": "application/json",
-        },
-      }
-    );
+    const postRequest = await axios.post("/jadwal", payload);
 
     if (postRequest.status == 200) {
       toastLabel.value = "Berhasil input jadwal";

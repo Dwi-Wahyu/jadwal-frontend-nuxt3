@@ -4,6 +4,7 @@
   <Card class="p-4 rounded-[8px]">
     <div class="grid grid-cols-1 md:grid-cols-4 items-center gap-3 mb-4">
       <Select
+        :model-value="filterStatus"
         id="filterStatus"
         label="Filter Status"
         :options="options"
@@ -11,6 +12,7 @@
         @update:model-value="onFilterStatusChange"
       />
       <Select
+        :model-value="filterRuangan"
         id="filterRuangan"
         label="Filter Ruangan"
         :options="ruanganOptions"
@@ -24,7 +26,7 @@
         variant="underline"
         v-model="filterTanggal"
       />
-      <Input variant="underline" id="pencarian" label="Pencarian" />
+      <Button @click="clearFilter">Clear Filter</Button>
     </div>
 
     <Table
@@ -127,6 +129,9 @@ const ruanganStore = useMyRuanganStore();
 
 const actions = [{ label: "Detail", onClick: onDetailClick }];
 
+const runtimeConfig = useRuntimeConfig();
+const { baseURL } = runtimeConfig.public.axios;
+
 type RuanganOptions = {
   label: string;
   value: string;
@@ -138,9 +143,7 @@ const options = ref([
   { label: "Approve", value: "Approve" },
   { label: "Belum Approve", value: "Belum Approve" },
 ]);
-const error = ref();
 
-const modalForm = ref(false);
 const modalInfo = ref(false);
 const showAlert = ref(false);
 
@@ -178,6 +181,12 @@ const onFilterRuanganChange = (value: string) => {
   filterRuangan.value = value;
 };
 
+function clearFilter() {
+  filterRuangan.value = "";
+  filterStatus.value = "";
+  filterTanggal.value = "";
+}
+
 const perPage = ref(5);
 
 const loadPeminjaman = () => {
@@ -207,10 +216,9 @@ function onDetailClick(row: any) {
 }
 
 async function handleLihatSurat() {
-  navigateTo(
-    `http://localhost:3001/surat_permohonan/${surat_permohonan.value}`,
-    { external: true }
-  );
+  navigateTo(`${baseURL}/surat/${surat_permohonan.value}`, {
+    external: true,
+  });
 }
 
 async function handleTolak() {
@@ -244,6 +252,8 @@ const handlePageChange = (page: any) => {
 
 const handlePerPageChange = (value: any) => {
   peminjamanStore.perPage = value;
+  console.log(peminjamanStore.perPage);
+
   loadPeminjaman();
 };
 
@@ -260,14 +270,13 @@ const loadRuangan = async () => {
         label: element.nama,
         value: element.id,
       });
-      filterRuangan.value = ruanganOptions.value[0].value;
+      nama_ruangan.value = ruanganOptions.value[0].value;
     }
   }
 };
 
 onMounted(async () => {
   loadPeminjaman();
-
   loadRuangan();
 });
 </script>
