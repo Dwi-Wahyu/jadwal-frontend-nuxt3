@@ -1,5 +1,7 @@
 import { defineStore } from "pinia";
 import { useAxios } from "@/composables/useAxios";
+import { jwtDecode } from "jwt-decode";
+
 interface ErrorData {
   msg: string;
   data: any;
@@ -23,6 +25,19 @@ export const useMyAuthStore = defineStore("myAuthStore", {
     error_data: null as ErrorData | null,
   }),
   persist: true,
+  getters: {
+    isTokenExpired(state): boolean {
+      if (!state.token) return true;
+
+      try {
+        const decoded: { exp: number } = jwtDecode(state.token);
+        const currentTime = Math.floor(Date.now() / 1000);
+        return decoded.exp < currentTime;
+      } catch (e) {
+        return true;
+      }
+    },
+  },
   actions: {
     async login(credentials: {
       email: string;
@@ -50,6 +65,10 @@ export const useMyAuthStore = defineStore("myAuthStore", {
             reject(error);
           });
       });
+    },
+
+    async clearToken() {
+      this.token = "";
     },
   },
 });

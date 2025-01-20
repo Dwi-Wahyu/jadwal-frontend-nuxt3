@@ -7,7 +7,20 @@
         <img src="/logo/logo-unhas.png" class="w-10 h-12" alt="" />
         <div class="text-white">
           <h1 class="font-extrabold text-3xl">E-JADWAL</h1>
-          <h1 class="font-bold">Fakultas Kedokteran Gigi Unhas</h1>
+          <div class="font-bold">
+            <span>Fakultas Kedokteran Gigi</span>
+
+            <span
+              @click="
+                navigateTo('https://github.com/Dwi-Wahyu', {
+                  external: true,
+                })
+              "
+              class="font-bold"
+            >
+              Unhas
+            </span>
+          </div>
         </div>
       </div>
     </div>

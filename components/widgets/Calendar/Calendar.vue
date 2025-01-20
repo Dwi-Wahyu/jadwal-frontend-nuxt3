@@ -146,7 +146,7 @@ function toggleFilter() {
 }
 
 function hapusFilter() {
-  if (filterRuangan.value != id) {
+  if (id) {
     navigateTo("/");
   } else {
     toggleFilter();

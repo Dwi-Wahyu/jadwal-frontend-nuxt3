@@ -1,10 +1,10 @@
 import { useMyAuthStore } from "~/store/auth";
 
 export default defineNuxtRouteMiddleware((to, from) => {
-  const store = useMyAuthStore();
+  const authStore = useMyAuthStore();
 
-  const token = store.token;
-  if (!token && to.path !== "/masuk") {
+  if (authStore.isTokenExpired && to.path !== "/masuk") {
+    authStore.clearToken();
     return navigateTo("/masuk");
   }
 });

@@ -3,8 +3,11 @@
 
   <h1 class="text-lg font-bold mt-4">Status Overview</h1>
 
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mt-2 gap-3">
-    <Card class="p-4 rounded flex gap-2" v-for="(item, idx) in status">
+  <div
+    v-if="status"
+    class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 mt-2 gap-3"
+  >
+    <Card class="p-4 rounded flex gap-3" v-for="(item, idx) in status">
       <img
         :src="`/icons/dashboard/${item.icon}.svg`"
         class="w-[38px] h-[38px]"
@@ -29,8 +32,15 @@ import Card from "~/components/widgets/card/Card.vue";
 import { useMyJadwalStore } from "~/store/jadwal";
 import { useMyPeminjamanStore } from "~/store/peminjaman";
 
+const axios = useAxios();
+
 const myJadwalStore = useMyJadwalStore();
 const myPeminjamanStore = useMyPeminjamanStore();
+
+const jumlahRuangan = ref();
+const jumlahPeminjaman = ref();
+const jumlahRuanganTersedia = ref();
+const jumlahRuanganTerpakai = ref();
 
 definePageMeta({
   layout: "default",
@@ -43,20 +53,41 @@ type Status = {
   icon: string;
 };
 
-const status = ref<Status[]>([
-  { title: "Jumlah Ruangan", value: 7, icon: "Jumlah-ruangan" },
-  {
-    title: "Jumlah Penggunaan Ruangan",
-    value: 4,
-    icon: "Jumlah-penggunaan-ruangan",
-  },
-  { title: "Jumlah Peminjaman", value: 3, icon: "Jumlah-peminjaman" },
-  {
-    title: "Jumlah Ruangan yang tersedia",
-    value: 3,
-    icon: "Jumlah-ruangan-tersedia",
-  },
-]);
+const status = ref<Status[]>([]);
+
+async function loadDashboardData() {
+  const fetchData = await axios.get("/ruangan/dashboard-data");
+
+  if (fetchData.data.success) {
+    status.value.push({
+      title: "Jumlah Ruangan",
+      value: fetchData.data.jumlahRuangan,
+      icon: "Jumlah-ruangan",
+    });
+
+    status.value.push({
+      title: "Jumlah Penggunaan Ruangan",
+      value: fetchData.data.jumlahRuanganTerpakai,
+      icon: "Jumlah-penggunaan-ruangan",
+    });
+
+    status.value.push({
+      title: "Jumlah Peminjaman",
+      value: fetchData.data.jumlahPeminjaman,
+      icon: "Jumlah-peminjaman",
+    });
+
+    status.value.push({
+      title: "Jumlah Ruangan Tersedia ",
+      value: fetchData.data.jumlahRuanganTersedia,
+      icon: "Jumlah-ruangan-tersedia",
+    });
+  }
+}
+
+onMounted(async () => {
+  loadDashboardData();
+});
 </script>
 
 <style></style>
