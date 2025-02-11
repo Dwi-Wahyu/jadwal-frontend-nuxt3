@@ -204,11 +204,6 @@ const axios = useAxios();
 const myJadwalStore = useMyJadwalStore();
 const myPeminjamanStore = useMyPeminjamanStore();
 
-const jumlahRuangan = ref();
-const jumlahPeminjaman = ref();
-const jumlahRuanganTersedia = ref();
-const jumlahRuanganTerpakai = ref();
-
 const runtimeConfig = useRuntimeConfig();
 
 const showModalForm = ref(false);

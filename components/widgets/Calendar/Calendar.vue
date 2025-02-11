@@ -5,7 +5,6 @@ import timeGridPlugin from "@fullcalendar/timegrid";
 
 import moment from "moment";
 
-import { useMyGlobalStore } from "~/store/global";
 import Modal from "../popup/Modal.vue";
 import type { EventInput } from "@fullcalendar/core/index.js";
 import Select from "../data-input/Select.vue";
@@ -18,10 +17,22 @@ const props = defineProps({
   },
 });
 
-const store = useMyGlobalStore();
 const axios = useAxios();
 
-const { data, openModal } = storeToRefs(store);
+type Data = {
+  nama_ruangan: string;
+  aktivitas: string;
+  tanggal: string;
+  mulai: string;
+  selesai: string;
+};
+
+const infoModal = ref(false);
+const infoData = ref<Data>();
+
+function toggleInfoModal() {
+  infoModal.value = !infoModal.value;
+}
 
 const emit = defineEmits(["toggle-modal-form"]);
 
@@ -84,8 +95,8 @@ const calendarOptions = {
   eventClick(info: any) {
     console.log(info.event.extendedProps);
 
-    store.data = info.event.extendedProps;
-    store.openModal = !store.openModal;
+    toggleInfoModal();
+    infoData.value = info.event.extendedProps;
   },
 };
 
@@ -211,11 +222,10 @@ onMounted(async () => {
   </Modal>
 
   <Modal
-    v-if="openModal"
-    action-button-text="Cari Jadwal"
+    v-if="infoModal"
     title="Informasi Kegiatan"
     :show-button="false"
-    @close="store.toggleModal"
+    @close="toggleInfoModal"
   >
     <div
       v-for="(item, index) in rows"
@@ -226,7 +236,7 @@ onMounted(async () => {
         {{ item.label }}
       </div>
       <div class="p-2">
-        : {{ data ? data[item.key as keyof ExtendedProps] : "-" }}
+        : {{ infoData ? infoData[item.key as keyof ExtendedProps] : "-" }}
       </div>
     </div>
   </Modal>
