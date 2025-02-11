@@ -90,8 +90,20 @@
           <Button variant="primary" @click="handleLihatSurat">
             Lihat Surat
           </Button>
-          <Button variant="danger" @click="handleTolak"> Tolak </Button>
-          <Button @click="handleApprove" variant="success"> Approve </Button>
+          <Button
+            v-if="!peminjamanApproved"
+            variant="danger"
+            @click="handleTolak"
+          >
+            Tolak
+          </Button>
+          <Button
+            v-if="!peminjamanApproved"
+            @click="handleApprove"
+            variant="success"
+          >
+            Approve
+          </Button>
         </div>
       </div>
     </div>
@@ -126,6 +138,8 @@ import { useMyRuanganStore } from "~/store/ruangan";
 
 const peminjamanStore = useMyPeminjamanStore();
 const ruanganStore = useMyRuanganStore();
+
+const peminjamanApproved = ref(false);
 
 const actions = [{ label: "Detail", onClick: onDetailClick }];
 
@@ -202,6 +216,8 @@ const loadPeminjaman = () => {
 };
 
 function onDetailClick(row: any) {
+  peminjamanApproved.value = false;
+
   id.value = row.id;
   nama_ruangan.value = row.nama_ruangan;
   aktivitas.value = row.aktivitas;
@@ -211,6 +227,10 @@ function onDetailClick(row: any) {
   selesai.value = row.selesai;
   status.value = row.status;
   surat_permohonan.value = row.surat_permohonan;
+
+  if (row.status == "Approve") {
+    peminjamanApproved.value = true;
+  }
 
   toggleModalInfo();
 }
