@@ -143,7 +143,7 @@
           <Input
             id="nomorWA"
             label="Nomor Whatsapp"
-            type="text"
+            type="number"
             v-model="nomor"
             :withIcon="true"
             placeholder="Masukkan Nomor Whatsapp"
