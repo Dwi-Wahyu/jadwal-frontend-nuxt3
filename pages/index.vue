@@ -211,7 +211,6 @@ import Select from "~/components/widgets/data-input/Select.vue";
 import FileInput from "~/components/widgets/data-input/FileInput.vue";
 import Modal from "~/components/widgets/popup/Modal.vue";
 import type { FieldError } from "~/types/FieldErrorTypes";
-import { useRuntimeConfig } from "#app";
 
 const runtimeConfig = useRuntimeConfig();
 

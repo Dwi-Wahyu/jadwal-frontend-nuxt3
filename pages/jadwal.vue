@@ -18,16 +18,22 @@
         v-model="filterTanggal"
       />
       <Button @click="clearFilter">Clear Filter</Button>
-      <Button variant="secondary" size="md" @click="toggleModalForm">
+
+      <Button
+        v-if="!isUmum"
+        variant="secondary"
+        size="md"
+        @click="toggleModalForm"
+      >
         Tambah Jadwal
       </Button>
     </div>
 
     <Table
-      :headers="jadwalStore.tableHeaders"
+      :headers="tableHeaders"
       :data="jadwalStore.data"
       :loading="jadwalStore.loading"
-      :show-button-action="true"
+      :show-button-action="showButtonAction"
       :actions="actions"
       :columns-visible="['nama_ruangan', 'tanggal', 'mulai', 'selesai']"
     />
@@ -209,8 +215,10 @@ import Edit from "@/public/icons/Edit.svg";
 import Alert from "~/components/widgets/popup/Alert.vue";
 import type { FieldError } from "~/types/FieldErrorTypes";
 import { useMyJadwalStore } from "~/store/jadwal";
+import { useMyAuthStore } from "~/store/auth";
 
 const jadwalStore = useMyJadwalStore();
+const authStore = useMyAuthStore();
 
 type Options = {
   label: string;
@@ -223,6 +231,16 @@ const modalForm = ref(false);
 const modalEdit = ref(false);
 const showAlert = ref(false);
 const successToast = ref(false);
+
+const isUmum = authStore.user?.role === "Umum";
+
+const showButtonAction = ref(authStore.user?.role === "Admin");
+
+let tableHeaders = ref(["Ruangan", "Tanggal", "Mulai", "Selesai", "Aksi"]);
+
+if (isUmum) {
+  tableHeaders.value.pop();
+}
 
 const axios = useAxios();
 

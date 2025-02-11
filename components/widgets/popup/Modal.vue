@@ -2,7 +2,12 @@
   <div class="w-screen flex fixed z-[60] top-0 left-0 h-screen">
     <div class="bg-black w-full h-full opacity-50"></div>
     <div class="w-full h-full flex fixed justify-center items-center">
-      <div class="flex flex-col w-[440px]">
+      <div
+        class="flex flex-col w-[440px] transition-all duration-300 ease-in-out"
+        :class="
+          startAnimation ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        "
+      >
         <div
           class="bg-[#F4F6F8] rounded-t-[12px] flex justify-between items-center p-4 border-b border-[#E3E6EF]"
         >
@@ -76,5 +81,13 @@ defineProps({
     type: Boolean,
     default: true,
   },
+});
+
+const startAnimation = ref(false);
+
+onMounted(() => {
+  setTimeout(() => {
+    startAnimation.value = true;
+  }, 1);
 });
 </script>

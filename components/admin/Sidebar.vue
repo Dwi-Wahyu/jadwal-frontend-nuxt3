@@ -18,9 +18,9 @@
           :class="store.sidebarActive ? '' : 'mb-2'"
         />
       </div>
-      <hr />
+      <hr class="mb-3" />
       <div
-        class="flex flex-col mt-3"
+        class="flex flex-col"
         v-for="(item, idx) in store.menu"
         @click="store.changeParent(item.route)"
       >
@@ -193,12 +193,8 @@ const handleClick = (id: string) => {
 const popupOpened = ref(false);
 const profilePopup = ref<ProfilePopup[]>([
   {
-    title: "Pengaturan",
-    rounded: "rounded-t-[8px]",
-  },
-  {
     title: "Keluar",
-    rounded: "rounded-b-[8px]",
+    rounded: "rounded-[8px]",
   },
 ]);
 const togglePopup = () => {

@@ -64,10 +64,6 @@ const handleClick = (id: string) => {
 const popupOpened = ref(false);
 const profilePopup = ref<ProfilePopup[]>([
   {
-    title: "Pengaturan",
-    rounded: "rounded-t-[8px]",
-  },
-  {
     title: "Keluar",
     rounded: "rounded-b-[8px]",
   },

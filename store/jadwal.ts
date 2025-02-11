@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { useMyAuthStore } from "./auth";
 interface ResData {
   msg: string;
   data: any;
