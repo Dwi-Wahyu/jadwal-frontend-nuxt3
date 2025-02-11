@@ -38,6 +38,10 @@ const handleAction = (emitType) => {
   emit(emitType);
 };
 
+function handleClose() {
+  emit("cancel");
+}
+
 defineProps({
   label: {
     type: String,

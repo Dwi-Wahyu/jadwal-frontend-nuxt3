@@ -106,14 +106,21 @@
     @close="toggleModalForm"
   >
     <form class="flex gap-3 flex-col">
-      <Select
-        id="namaRuangan"
-        :options="RuanganOptions"
-        label="Nama Ruangan"
-        placeholder="Nama Ruangan"
-        :model-value="ruangan"
-        @update:model-value="onChangeRuangan"
-      />
+      <div>
+        <Select
+          id="namaRuangan"
+          :options="RuanganOptions"
+          label="Nama Ruangan"
+          placeholder="Nama Ruangan"
+          :model-value="ruangan"
+          @update:model-value="onChangeRuangan"
+        />
+        <div v-for="(item, idx) in fieldError" :key="idx">
+          <h1 v-if="item.path == 'ruangan'" class="text-danger text-sm mt-1">
+            {{ item.message }}
+          </h1>
+        </div>
+      </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
           <Input
@@ -124,12 +131,6 @@
             placeholder="Masukkan Jam Mulai"
             :error="checkFieldError('mulai')"
           />
-
-          <div v-for="(item, idx) in fieldError" :key="idx">
-            <h1 v-if="item.path == 'mulai'" class="text-danger text-sm mt-1">
-              {{ item.message }}
-            </h1>
-          </div>
         </div>
 
         <div>
@@ -148,6 +149,11 @@
             </h1>
           </div>
         </div>
+      </div>
+      <div v-for="(item, idx) in fieldError" :key="idx">
+        <h1 v-if="item.path == 'mulai'" class="text-danger text-sm">
+          {{ item.message }}
+        </h1>
       </div>
 
       <div>
@@ -189,9 +195,9 @@
 
   <Alert
     v-if="showAlert"
-    label="Anda akan menghapus Aktivitas Molar, Apakah Anda Yakin? Menghapus aktivitas berarti menghapusnya secara permanen"
-    @cancel="toggleAlert(false)"
-    @submit="handleHapus"
+    :label="alertLabel"
+    @cancel="toggleAlert"
+    @confirm="handleHapus"
   />
 </template>
 
@@ -231,6 +237,8 @@ const modalForm = ref(false);
 const modalEdit = ref(false);
 const showAlert = ref(false);
 const successToast = ref(false);
+
+const alertLabel = ref("");
 
 const isUmum = authStore.user?.role === "Umum";
 
@@ -330,14 +338,15 @@ function onEditClick(row: any) {
 
 function onHapusClick(row: any) {
   id.value = row.id;
+  alertLabel.value = `Anda akan menghapus Aktivitas ${row.aktivitas}, Apakah Anda Yakin? Menghapus aktivitas berarti menghapusnya secara permanen `;
 
-  toggleAlert(true);
+  toggleAlert();
 }
 
 async function handleHapus() {
-  const tolakRequest = await axios.delete(`/jadwal/${id.value}`);
-  if (tolakRequest.status == 200) {
-    toggleAlert(false);
+  const hapusRequest = await axios.delete(`/jadwal/${id.value}`);
+  if (hapusRequest.status == 200) {
+    toggleAlert();
     loadData();
   }
 }
@@ -413,8 +422,8 @@ function toggleModalEdit() {
   modalEdit.value = !modalEdit.value;
 }
 
-function toggleAlert(show: boolean) {
-  showAlert.value = show;
+function toggleAlert() {
+  showAlert.value = !showAlert.value;
 }
 
 async function handleSubmit() {
@@ -431,11 +440,22 @@ async function handleSubmit() {
 
     const postRequest = await axios.post("/jadwal", payload);
 
-    if (postRequest.status == 200) {
+    if (postRequest.data.success) {
       toastLabel.value = "Berhasil input jadwal";
       toggleToast();
       toggleModalForm();
       loadData();
+    } else {
+      let errorPath = "mulai";
+
+      if (postRequest.data.message === "Ruangan tidak tersedia") {
+        errorPath = "ruangan";
+      }
+
+      fieldError.value.push({
+        path: errorPath,
+        message: postRequest.data.message,
+      });
     }
   }
 }

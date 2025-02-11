@@ -43,7 +43,7 @@
       action-button-text="Kirim Permintaan"
       v-if="showModalForm"
     >
-      <div class="flex gap-4 flex-col">
+      <div class="flex gap-4 flex-col" id="modal-container">
         <div>
           <Select
             :model-value="ruangan"
@@ -217,6 +217,8 @@ const runtimeConfig = useRuntimeConfig();
 const showModalForm = ref(false);
 const showToast = ref(false);
 
+const modalRef = ref<HTMLDivElement | null>(null);
+
 const toggleModal = () => {
   showModalForm.value = !showModalForm.value;
 };
@@ -324,6 +326,8 @@ const handleSubmit = async () => {
       toggleModal();
       toggleToast();
     } else {
+      alert(response.message);
+
       console.log(response);
     }
   }
