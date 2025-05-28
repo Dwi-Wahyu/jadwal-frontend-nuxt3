@@ -6,7 +6,7 @@
       <button @click="store.actionSidebar">
         <img src="/icons/Hamburger.svg" alt="" />
       </button>
-      <img src="/icons/E-Jadwal-Active.svg" alt="" />
+      <IconsEJadwalActive />
     </div>
 
     <button @click="togglePopup">
