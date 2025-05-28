@@ -8,8 +8,16 @@
         class="flex items-center"
         :class="store.sidebarActive ? 'justify-between' : 'mb-2 justify-center'"
       >
-        <IconsEJadwalActive v-if="store.sidebarActive" />
-        <IconsEJadwalInactive v-else />
+        <img
+          v-if="store.sidebarActive"
+          src="/icons/E-Jadwal-active.svg"
+          alt="E-Jadwal Active"
+        />
+        <img
+          v-else
+          src="/icons/E-Jadwal-inactive.svg"
+          alt="E-Jadwal Inactive"
+        />
       </div>
       <hr class="mb-3" />
       <div
@@ -91,8 +99,16 @@
       :class="store.sidebarActive ? 'left-0' : '-left-96'"
     >
       <div class="flex justify-between items-center mb-2">
-        <IconsEJadwalActive v-if="store.sidebarActive" />
-        <IconsEJadwalInactive v-else />
+        <img
+          v-if="store.sidebarActive"
+          src="/icons/E-Jadwal-active.svg"
+          alt="E-Jadwal Active"
+        />
+        <img
+          v-else
+          src="/icons/E-Jadwal-inactive.svg"
+          alt="E-Jadwal Inactive"
+        />
       </div>
       <hr />
       <div
@@ -148,9 +164,6 @@
 import { useMySidebarStore } from "~/store/sidebar";
 import Card from "@/components/widgets/card/Card.vue";
 import { useMyAuthStore } from "~/store/auth";
-
-import EJadwalActive from "~/components/icons/E-Jadwal-active.svg";
-import EJadwalInactive from "~/components/icons/E-Jadwal-active.svg";
 
 const store = useMySidebarStore();
 const route = useRoute();

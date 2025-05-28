@@ -6,7 +6,7 @@
       <button @click="store.actionSidebar">
         <img src="/icons/Hamburger.svg" alt="" />
       </button>
-      <IconsEJadwalActive />
+      <img src="/icons/E-Jadwal-active.svg" alt="E-Jadwal Active" />
     </div>
 
     <button @click="togglePopup">
@@ -36,8 +36,6 @@
 import { useMyAuthStore } from "~/store/auth";
 import { useMySidebarStore } from "~/store/sidebar";
 import Card from "../widgets/card/Card.vue";
-
-import EJadwal from "~/assets/logo/E-Jadwal-active.svg";
 
 const store = useMySidebarStore();
 const route = useRoute();
