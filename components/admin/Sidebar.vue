@@ -8,15 +8,8 @@
         class="flex items-center"
         :class="store.sidebarActive ? 'justify-between' : 'mb-2 justify-center'"
       >
-        <img
-          :src="
-            store.sidebarActive
-              ? '/icons/E-Jadwal-Active.svg'
-              : '/icons/E-Jadwal-Inactive.svg'
-          "
-          alt=""
-          :class="store.sidebarActive ? '' : 'mb-2'"
-        />
+        <IconsEJadwalActive v-if="store.sidebarActive" />
+        <IconsEJadwalInactive v-else />
       </div>
       <hr class="mb-3" />
       <div
