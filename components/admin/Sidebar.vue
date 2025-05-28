@@ -90,16 +90,9 @@
       class="h-full fixed bg-primary w-[80vw] p-5 transition-all duration-500 ease-in-out"
       :class="store.sidebarActive ? 'left-0' : '-left-96'"
     >
-      <div class="flex justify-between items-center">
-        <img
-          :src="
-            store.sidebarActive
-              ? '/icons/E-Jadwal-Active.svg'
-              : '/icons/E-Jadwal-Inactive.svg'
-          "
-          alt=""
-          :class="store.sidebarActive ? '' : 'mb-2'"
-        />
+      <div class="flex justify-between items-center mb-2">
+        <IconsEJadwalActive v-if="store.sidebarActive" />
+        <IconsEJadwalInactive v-else />
       </div>
       <hr />
       <div
