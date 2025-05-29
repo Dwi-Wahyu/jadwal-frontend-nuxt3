@@ -10,12 +10,12 @@
       >
         <img
           v-if="store.sidebarActive"
-          src="/icons/E-Jadwal-active.svg"
+          src="/icons/E-Jadwal-Active.svg"
           alt="E-Jadwal Active"
         />
         <img
           v-else
-          src="/icons/E-Jadwal-inactive.svg"
+          src="/icons/E-Jadwal-Inactive.svg"
           alt="E-Jadwal Inactive"
         />
       </div>
@@ -101,12 +101,12 @@
       <div class="flex justify-between items-center mb-2">
         <img
           v-if="store.sidebarActive"
-          src="/icons/E-Jadwal-active.svg"
+          src="/icons/E-Jadwal-Active.svg"
           alt="E-Jadwal Active"
         />
         <img
           v-else
-          src="/icons/E-Jadwal-inactive.svg"
+          src="/icons/E-Jadwal-Inactive.svg"
           alt="E-Jadwal Inactive"
         />
       </div>
