@@ -25,7 +25,7 @@
           class="even:bg-slate-100 odd:bg-white font-semibold"
         >
           <td v-if="showRowNumbers" class="px-4 py-2 text-slate-700 rounded-l">
-            {{ rowIndex + 1 }}
+            {{ rowIndex + 1 + rowNumberOffset }}
           </td>
           <td
             v-for="(value, colIndex) in columnsVisible"
@@ -102,6 +102,10 @@ const props = defineProps({
   showRowNumbers: {
     type: Boolean,
     default: false,
+  },
+  rowNumberOffset: {
+    type: Number,
+    default: 0,
   },
   showButtonAction: {
     type: Boolean,

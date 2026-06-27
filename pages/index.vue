@@ -37,7 +37,7 @@
       </header>
 
       <!-- Jadwal terbaru / ledger table -->
-      <Card class="ejadwal-card p-5 w-full rounded-2xl sm:w-[60%]">
+      <Card class="ejadwal-card p-5 w-full rounded-2xl sm:w-[60%] mt-6">
         <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <span class="ledger-dot"></span>
@@ -50,9 +50,10 @@
 
         <Table
           :headers="['Tanggal', 'Waktu', 'Ruangan', 'Aktivitas']"
-          :data="jadwalList"
+          :data="paginatedJadwal"
           :loading="loadingJadwal"
           :show-row-numbers="true"
+          :row-number-offset="(jadwalPage - 1) * jadwalPerPage"
           :columns-visible="[
             'tanggal_display',
             'waktu_display',
@@ -60,6 +61,33 @@
             'aktivitas',
           ]"
         />
+
+        <div
+          v-if="jadwalList.length > jadwalPerPage"
+          class="flex items-center justify-between mt-4"
+        >
+          <span class="text-xs font-medium text-slate-500">
+            Halaman {{ jadwalPage }} dari {{ jadwalTotalPages }}
+          </span>
+          <div class="flex items-center gap-2">
+            <button
+              type="button"
+              class="ledger-nav-btn"
+              :disabled="jadwalPage === 1"
+              @click="jadwalPage--"
+            >
+              Previous
+            </button>
+            <button
+              type="button"
+              class="ledger-nav-btn"
+              :disabled="jadwalPage === jadwalTotalPages"
+              @click="jadwalPage++"
+            >
+              Next
+            </button>
+          </div>
+        </div>
       </Card>
 
       <!-- Calendar card -->
@@ -405,6 +433,27 @@ type JadwalRow = {
 const jadwalList = ref<JadwalRow[]>([]);
 const loadingJadwal = ref(false);
 
+// Client-side pagination: backend's paginated /jadwal/data endpoint
+// requires a Bearer token, which the public landing page doesn't have.
+// We fetch the full list once (GET /jadwal) and page through it locally.
+const jadwalPerPage = 10;
+const jadwalPage = ref(1);
+
+const jadwalTotalPages = computed(() =>
+  Math.max(1, Math.ceil(jadwalList.value.length / jadwalPerPage)),
+);
+
+const paginatedJadwal = computed(() => {
+  const start = (jadwalPage.value - 1) * jadwalPerPage;
+  return jadwalList.value.slice(start, start + jadwalPerPage);
+});
+
+watch(jadwalTotalPages, (totalPages) => {
+  if (jadwalPage.value > totalPages) {
+    jadwalPage.value = totalPages;
+  }
+});
+
 const bulanIndonesia = [
   "Jan",
   "Feb",
@@ -446,6 +495,7 @@ const loadJadwal = async () => {
       rows.sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1));
 
       jadwalList.value = rows;
+      jadwalPage.value = 1;
     }
   } finally {
     loadingJadwal.value = false;
@@ -481,7 +531,8 @@ onMounted(async () => {
       #0e8f7c 0%,
       rgba(14, 143, 124, 0) 60%
     ),
-    radial-gradient(90% 70% at 100% 0%, #c8a738 0%, rgba(201, 162, 39, 0) 45%);
+    radial-gradient(90% 70% at 100% 0%, #c9a227 0%, rgba(201, 162, 39, 0) 45%),
+    linear-gradient(180deg, #01453d 0%, #02635a 38%, #0e8f7c 72%, #cfe9e2 100%);
 }
 
 .ejadwal-grid {
@@ -525,5 +576,28 @@ onMounted(async () => {
   border-radius: 999px;
   background: #01796f;
   box-shadow: 0 0 0 3px rgba(1, 121, 111, 0.15);
+}
+
+.ledger-nav-btn {
+  padding: 6px 16px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 8px;
+  background: #f4f6f8;
+  color: #01453d;
+  border: 1px solid rgba(4, 59, 52, 0.1);
+  transition:
+    background-color 0.15s ease,
+    color 0.15s ease;
+}
+
+.ledger-nav-btn:hover:not(:disabled) {
+  background: #01796f;
+  color: #ffffff;
+}
+
+.ledger-nav-btn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 </style>
