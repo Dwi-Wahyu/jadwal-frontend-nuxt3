@@ -91,6 +91,11 @@ const calendarOptions = {
     center: "title",
     end: "dayGridMonth,timeGridDay",
   },
+  // FullCalendar's day-grid row height is derived as (width / aspectRatio).
+  // Default aspectRatio is 1.35, giving the "original" row height.
+  // height_new / height_old = aspectRatio_old / aspectRatio_new
+  // To get rows at 60% of their original height: 1.35 / 0.6 = 2.25
+  aspectRatio: 2.25,
 
   eventClick(info: any) {
     console.log(info.event.extendedProps);
