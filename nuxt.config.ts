@@ -38,7 +38,7 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       axios: {
-        baseURL: "http://localhost:3001/api",
+        baseURL: process.env.NUXT_PUBLIC_AXIOS_BASE_URL,
       },
     },
   },

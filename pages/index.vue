@@ -1,33 +1,72 @@
 <template>
-  <div
-    class="bg-secondary w-full min-h-svh flex justify-center items-center h-full overflow-auto p-5"
-  >
-    <div class="absolute w-full left-0 top-9 justify-center flex">
-      <div class="w-fit flex items-center gap-3">
-        <img src="/logo/logo-unhas.png" class="w-10 h-12" alt="" />
-        <div class="text-white">
-          <h1 class="font-extrabold text-3xl">E-JADWAL</h1>
-          <div class="font-bold">
-            <span>Fakultas Kedokteran Gigi</span>
+  <div class="ejadwal-bg w-full min-h-svh overflow-auto">
+    <!-- Decorative grid + gradient background -->
+    <div class="ejadwal-gradient" aria-hidden="true"></div>
+    <div class="ejadwal-grid" aria-hidden="true"></div>
 
-            <span
-              @click="
-                navigateTo('https://github.com/Dwi-Wahyu', {
-                  external: true,
-                })
-              "
-              class="font-bold"
+    <div class="relative w-full flex flex-col items-center px-5 pb-16">
+      <!-- Brand header -->
+      <header class="w-full flex justify-center pt-10 pb-6 sm:pt-14">
+        <div class="w-fit flex items-center gap-4">
+          <img
+            src="/logo/logo-unhas.png"
+            class="w-12 h-14 drop-shadow-sm"
+            alt="Logo Universitas Hasanuddin"
+          />
+          <div class="text-white">
+            <h1
+              class="font-extrabold text-3xl sm:text-4xl tracking-tight leading-none"
             >
-              Unhas
-            </span>
+              E-JADWAL
+            </h1>
+            <div class="font-semibold text-sm sm:text-base text-white/90">
+              <span>Fakultas Kedokteran Gigi</span>
+              <span
+                @click="
+                  navigateTo('https://github.com/Dwi-Wahyu', {
+                    external: true,
+                  })
+                "
+                class="font-semibold cursor-pointer hover:underline hover:underline-offset-4"
+              >
+                Unhas
+              </span>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+      </header>
 
-    <Card class="p-5 w-full rounded-xl sm:w-[55%] mt-24">
-      <Calendar @toggle-modal-form="toggleModal" />
-    </Card>
+      <!-- Jadwal terbaru / ledger table -->
+      <Card class="ejadwal-card p-5 w-full rounded-2xl sm:w-[60%]">
+        <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
+          <div class="flex items-center gap-2">
+            <span class="ledger-dot"></span>
+            <h2 class="font-bold text-lg text-[#10231F]">Jadwal Terbaru</h2>
+          </div>
+          <span class="text-xs font-medium text-slate-500">
+            {{ jadwalList.length }} aktivitas tercatat
+          </span>
+        </div>
+
+        <Table
+          :headers="['Tanggal', 'Waktu', 'Ruangan', 'Aktivitas']"
+          :data="jadwalList"
+          :loading="loadingJadwal"
+          :show-row-numbers="true"
+          :columns-visible="[
+            'tanggal_display',
+            'waktu_display',
+            'nama_ruangan',
+            'aktivitas',
+          ]"
+        />
+      </Card>
+
+      <!-- Calendar card -->
+      <Card class="ejadwal-card p-5 w-full mt-6 rounded-2xl sm:w-[60%]">
+        <Calendar @toggle-modal-form="toggleModal" />
+      </Card>
+    </div>
 
     <Toast
       v-if="showToast"
@@ -210,6 +249,7 @@ import Input from "~/components/widgets/data-input/Input.vue";
 import Select from "~/components/widgets/data-input/Select.vue";
 import FileInput from "~/components/widgets/data-input/FileInput.vue";
 import Modal from "~/components/widgets/popup/Modal.vue";
+import Table from "~/components/widgets/datatable/Table.vue";
 import type { FieldError } from "~/types/FieldErrorTypes";
 
 const runtimeConfig = useRuntimeConfig();
@@ -264,7 +304,7 @@ function checkEmpty(field: Ref<string>, fieldName: string) {
 
 function checkFieldError(field: string) {
   const isFieldError = fieldError.value.find(
-    (element) => element.path == field
+    (element) => element.path == field,
   );
   if (isFieldError) {
     return true;
@@ -325,6 +365,7 @@ const handleSubmit = async () => {
     if (response.success) {
       toggleModal();
       toggleToast();
+      loadJadwal();
     } else {
       alert(response.message);
 
@@ -349,7 +390,140 @@ const loadRuangan = async () => {
   }
 };
 
+// ----- Jadwal terbaru (ledger table) -----
+type JadwalRow = {
+  id: string;
+  nama_ruangan: string;
+  aktivitas: string;
+  tanggal: string;
+  mulai: string;
+  selesai: string;
+  tanggal_display: string;
+  waktu_display: string;
+};
+
+const jadwalList = ref<JadwalRow[]>([]);
+const loadingJadwal = ref(false);
+
+const bulanIndonesia = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "Mei",
+  "Jun",
+  "Jul",
+  "Agu",
+  "Sep",
+  "Okt",
+  "Nov",
+  "Des",
+];
+
+function formatTanggal(tanggal: string) {
+  const date = new Date(tanggal);
+  if (isNaN(date.getTime())) return tanggal;
+  return `${date.getDate()} ${bulanIndonesia[date.getMonth()]} ${date.getFullYear()}`;
+}
+
+const loadJadwal = async () => {
+  loadingJadwal.value = true;
+  try {
+    const request = await axios.get("/jadwal");
+
+    if (request.status == 200) {
+      const rows: JadwalRow[] = request.data.data.map((item: any) => ({
+        id: item.id,
+        nama_ruangan: item.nama_ruangan,
+        aktivitas: item.aktivitas,
+        tanggal: item.tanggal,
+        mulai: item.mulai,
+        selesai: item.selesai,
+        tanggal_display: formatTanggal(item.tanggal),
+        waktu_display: `${item.mulai} - ${item.selesai}`,
+      }));
+
+      rows.sort((a, b) => (a.tanggal < b.tanggal ? 1 : -1));
+
+      jadwalList.value = rows;
+    }
+  } finally {
+    loadingJadwal.value = false;
+  }
+};
+
 onMounted(async () => {
   loadRuangan();
+  loadJadwal();
 });
 </script>
+
+<style scoped>
+/* ---------------------------------------------------------------
+   E-JADWAL background: soft gradient mesh + faint dot grid.
+   Brand anchor color is the existing teal secondary (#01796F),
+   extended into a deep-teal -> pale-mint transition so the change
+   in tone is smooth, not a hard color stop.
+----------------------------------------------------------------*/
+.ejadwal-bg {
+  position: relative;
+  background-color: #043b34;
+}
+
+.ejadwal-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      120% 80% at 12% -10%,
+      #0e8f7c 0%,
+      rgba(14, 143, 124, 0) 60%
+    ),
+    radial-gradient(90% 70% at 100% 0%, #c8a738 0%, rgba(201, 162, 39, 0) 45%);
+}
+
+.ejadwal-grid {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background-image: radial-gradient(
+    rgba(255, 255, 255, 0.16) 1px,
+    transparent 1px
+  );
+  background-size: 26px 26px;
+  mask-image: linear-gradient(
+    180deg,
+    rgba(0, 0, 0, 0.9) 0%,
+    rgba(0, 0, 0, 0.55) 55%,
+    rgba(0, 0, 0, 0.15) 100%
+  );
+}
+
+.brand-rule {
+  width: 64px;
+  height: 2px;
+  margin: 6px 0 6px;
+  background: linear-gradient(90deg, #c9a227, rgba(201, 162, 39, 0));
+  border-radius: 2px;
+}
+
+.ejadwal-card {
+  position: relative;
+  z-index: 2;
+  box-shadow:
+    0 1px 2px rgba(4, 27, 23, 0.06),
+    0 18px 40px -16px rgba(4, 27, 23, 0.35);
+  border: 1px solid rgba(4, 59, 52, 0.06);
+}
+
+.ledger-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  background: #01796f;
+  box-shadow: 0 0 0 3px rgba(1, 121, 111, 0.15);
+}
+</style>
