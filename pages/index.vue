@@ -37,7 +37,7 @@
       </header>
 
       <!-- Jadwal terbaru / ledger table -->
-      <Card class="ejadwal-card p-5 w-full rounded-2xl sm:w-[60%] mt-6">
+      <Card class="ejadwal-card p-5 w-full rounded-2xl md:w-[60%] mt-6">
         <div class="flex items-center justify-between mb-4 flex-wrap gap-2">
           <div class="flex items-center gap-2">
             <span class="ledger-dot"></span>
@@ -91,7 +91,7 @@
       </Card>
 
       <!-- Calendar card -->
-      <Card class="ejadwal-card p-5 w-full mt-6 rounded-2xl sm:w-[60%]">
+      <Card class="ejadwal-card p-5 w-full mt-6 rounded-2xl md:w-[60%]">
         <Calendar @toggle-modal-form="toggleModal" />
       </Card>
     </div>
